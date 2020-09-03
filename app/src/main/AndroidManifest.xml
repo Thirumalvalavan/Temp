@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.thiru.temp.temp">
+
+    <!-- Needed permission to start the FitTrackingService in foreground mode -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <application
+        android:name="com.thiru.temp.temp.App"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <activity android:name="com.thiru.temp.temp.MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:launchMode="singleTask">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <!-- Define your supported deeplinks -->
+            <intent-filter
+                android:autoVerify="true"
+                tools:targetApi="m">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="fit-actions.firebaseapp.com"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
+
+
+        <service
+            android:name="com.thiru.temp.temp.tracking.FitTrackingService"
+            android:enabled="true"
+            android:exported="true" />
+
+
+<!--         Define your SliceProvider, you can define the authority name as you prefer but -->
+<!--         remember that authorities must be unique between different apps -->
+<!--         https://developer.android.com/guide/topics/providers/content-provider-creating#designing-an-authority -->
+<!--         This authority is used as urlTemplate for app actions with Slices -->
+<!--         And to grant access to SliceManager, see grantAssistantPermissions in FitApp.kt -->
+        <provider
+            android:name="com.thiru.temp.temp.slices.FitSliceProvider"
+            android:authorities="com.example.temp.slices.provider"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.app.slice.category.SLICE" />
+            </intent-filter>
+
+        </provider>
+
+        <!-- Add an indication where to find the actions.xml -->
+        <meta-data
+            android:name="com.google.android.actions"
+            android:resource="@xml/actions" />
+
+
+    </application>
+
+</manifest>
